@@ -96,44 +96,44 @@ http {
 
 # ------- TEST START -------
 
-    location = / {
+    location / {
       proxy_pass https://devsec-istore.herokuapp.com/; # server listens here and receives nginx requests
     }
 
-    location = /products {
+    location /products/ {
       proxy_pass https://devsec-istore.herokuapp.com/products/; # server listens here and receives nginx requests
     }
 
-    location = /products/(.*) {
+    location /products/(.*) {
       proxy_pass https://devsec-istore.herokuapp.com/products/$1; # server listens here and receives nginx requests
     }
 
-    location = /cart {
+    location /cart/ {
       proxy_pass https://devsec-istore.herokuapp.com/cart/; # server listens here and receives nginx requests
     }
 
-    location = /checkout {
+    location /checkout/ {
       proxy_pass https://devsec-istore.herokuapp.com/checkout/; # server listens here and receives nginx requests
     }
 
-    location ^~ /api/basket/ {
-      proxy_pass https://devsec-istore-basket.herokuapp.com/api/v1/basketbff/; # server listens here and receives nginx requests
-    }
-
-    location ^~ /api/catalog/ {
-      proxy_pass https://devsec-istore-catalog.herokuapp.com/api/v1/catalogbff/; # server listens here and receives nginx requests
-    }
-
-    location ~ / {
-      proxy_pass https://devsec-istore-is.herokuapp.com; # server listens here and receives nginx requests
+    location ^~ /api/(basket|catalog)/ {
+      proxy_pass https://devsec-istore-$1.herokuapp.com/api/v1/$1bff/; # server listens here and receives nginx requests
     }
 
     location ^~ /identity/ {
       proxy_pass https://devsec-istore-is.herokuapp.com/; # server listens here and receives nginx requests
     }
 
+    #location ^~ /identity/(.well-known|account|ciba|connect|consent|device|diagnostics|externallogin|grants|home|redirect|serversidesessions|shared)/(.*) {
+    #  proxy_pass https://devsec-istore-cdn.herokuapp.com/identity/$1/$2; # server listens here and receives nginx requests
+    #}
+
     location ^~ /identity/(.well-known|account|ciba|connect|consent|device|diagnostics|externallogin|grants|home|redirect|serversidesessions|shared)/(.*) {
-      proxy_pass https://devsec-istore-cdn.herokuapp.com/identity/$1/$2; # server listens here and receives nginx requests
+      proxy_pass https://devsec-istore-is.herokuapp.com/$1/$2; # server listens here and receives nginx requests
+    }
+
+    location ^~ /(.well-known|account|ciba|connect|consent|device|diagnostics|externallogin|grants|home|redirect|serversidesessions|shared)/(.*) {
+      proxy_pass https://devsec-istore-is.herokuapp.com/$1/$2; # server listens here and receives nginx requests
     }
 
 # -------- TEST END --------
