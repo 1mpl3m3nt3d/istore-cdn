@@ -96,8 +96,24 @@ http {
 
 # ------- TEST START -------
 
-    location / {
+    location = / {
       proxy_pass https://devsec-istore.herokuapp.com/; # server listens here and receives nginx requests
+    }
+
+    location = /products {
+      proxy_pass https://devsec-istore.herokuapp.com/products/; # server listens here and receives nginx requests
+    }
+
+    location = /products/(.*) {
+      proxy_pass https://devsec-istore.herokuapp.com/products/$1; # server listens here and receives nginx requests
+    }
+
+    location = /cart {
+      proxy_pass https://devsec-istore.herokuapp.com/cart/; # server listens here and receives nginx requests
+    }
+
+    location = /checkout {
+      proxy_pass https://devsec-istore.herokuapp.com/checkout/; # server listens here and receives nginx requests
     }
 
     location ^~ /api/basket/ {
@@ -106,6 +122,10 @@ http {
 
     location ^~ /api/catalog/ {
       proxy_pass https://devsec-istore-catalog.herokuapp.com/api/v1/catalogbff/; # server listens here and receives nginx requests
+    }
+
+    location ^~ / {
+      proxy_pass https://devsec-istore-is.herokuapp.com/; # server listens here and receives nginx requests
     }
 
     location ^~ /identity/ {
