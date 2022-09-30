@@ -100,15 +100,15 @@ http {
       proxy_pass https://devsec-istore.herokuapp.com; # server listens here and receives nginx requests
     }
 
-    location ~* /api/basket/ {
-      proxy_pass https://devsec-istore-catalog.herokuapp.com/; # server listens here and receives nginx requests
+    location ~* /api/basket {
+      proxy_pass https://devsec-istore-catalog.herokuapp.com; # server listens here and receives nginx requests
     }
 
-    location ~* /api/catalog/ {
-      proxy_pass https://devsec-istore-catalog.herokuapp.com/; # server listens here and receives nginx requests
+    location ~* /api/catalog {
+      proxy_pass https://devsec-istore-catalog.herokuapp.com; # server listens here and receives nginx requests
     }
 
-    location ~* ^/(.well-known|account|ciba|connect|consent|device|diagnostics|externallogin|grants|home|identity|redirect|serversidesessions|shared)/ {
+    location ~* /(.well-known|account|ciba|connect|consent|device|diagnostics|externallogin|grants|home|identity|redirect|serversidesessions|shared) {
       proxy_pass https://devsec-istore-is.herokuapp.com/$1; # server listens here and receives nginx requests
     }
 
