@@ -94,23 +94,21 @@ http {
 
     access_log <%= ENV['NGINX_ACCESS_LOG_PATH'] || 'logs/nginx/_.access.log' %> main;
 
-    root <%= ENV['HOME'] || '/app' %>/public;
-
 # ------- TEST START -------
 
     location / {
       proxy_pass https://devsec-istore.herokuapp.com; # server listens here and receives nginx requests
     }
 
-    location /api/basket {
+    location ^~ /api/basket {
       proxy_pass https://devsec-istore-catalog.herokuapp.com; # server listens here and receives nginx requests
     }
 
-    location /api/catalog {
+    location ^~ /api/catalog {
       proxy_pass https://devsec-istore-catalog.herokuapp.com; # server listens here and receives nginx requests
     }
 
-    location /identity {
+    location ^~ /identity {
       proxy_pass https://devsec-istore-is.herokuapp.com; # server listens here and receives nginx requests
     }
 
@@ -128,6 +126,7 @@ http {
       #proxy_pass http://host.docker.internal:5001 weight=1 fail_timeout=0;
       #proxy_pass http://unix:/tmp/nginx.socket weight=1 fail_timeout=0;
 
+      root <%= ENV['HOME'] || '/app' %>/public;
       try_files $uri $uri/ $uri.html =404;
 
       proxy_redirect off;
