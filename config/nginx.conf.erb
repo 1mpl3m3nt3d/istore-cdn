@@ -112,7 +112,7 @@ http {
       proxy_pass https://devsec-istore-catalog.herokuapp.com; # server listens here and receives nginx requests
     }
 
-    location / {
+    location ~* / {
       proxy_pass https://devsec-istore.herokuapp.com; # server listens here and receives nginx requests
     }
 
