@@ -86,51 +86,24 @@ http {
     proxy_send_timeout 90;
 
     location = / {
-      # force SSL / redirect http -> https
-      if ($http_x_forwarded_proto != "https") {
-        return 301 https://$host$request_uri;
-      }
-
       proxy_pass https://devsec-istore.herokuapp.com;
     }
 
     location ^~ /basket {
-      # force SSL / redirect http -> https
-      if ($http_x_forwarded_proto != "https") {
-        return 301 https://$host$request_uri;
-      }
-
       proxy_pass https://devsec-istore-basket.herokuapp.com;
     }
 
     location ^~ /catalog {
-      # force SSL / redirect http -> https
-      if ($http_x_forwarded_proto != "https") {
-        return 301 https://$host$request_uri;
-      }
-
       proxy_pass https://devsec-istore-catalog.herokuapp.com;
     }
 
     location ^~ /identity {
-      # force SSL / redirect http -> https
-      if ($http_x_forwarded_proto != "https") {
-        return 301 https://$host$request_uri;
-      }
-
       proxy_pass https://devsec-istore-is.herokuapp.com;
     }
 
     location ^~ /assets {
-      # force SSL / redirect http -> https
-      if ($http_x_forwarded_proto != "https") {
-        return 301 https://$host$request_uri;
-      }
-
       root <%= ENV['HOME'] %>/public;
       try_files $uri $uri/ $uri.html $uri/index.html =404;
-
-      #alias <%= ENV['HOME'] %>/public/assets;
     }
 
     location / {
