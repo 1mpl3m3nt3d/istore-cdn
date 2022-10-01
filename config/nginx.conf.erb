@@ -132,7 +132,7 @@ http {
       proxy_pass https://devsec-istore-is.herokuapp.com/$1/$2; # server listens here and receives nginx requests
     }
 
-    location ~* (\.well-known|account|ciba|connect|consent|css|device|diagnostics|externallogin|grants|home|js|lib|redirect|serversidesessions|shared)/(.*) {
+    location ~* (\.well-known|account|ciba|connect|consent|device|diagnostics|externallogin|grants|home|redirect|serversidesessions|shared)/(.*) {
       proxy_pass https://devsec-istore-is.herokuapp.com/$1/$2; # server listens here and receives nginx requests
     }
 
