@@ -139,22 +139,22 @@ http {
       proxy_pass https://devsec-istore-catalog.herokuapp.com/$1;
     }
 
-    location ~* /swagger/basket {
+    location ~* /(swagger)/basket {
       # force SSL / redirect http -> https
       if ($http_x_forwarded_proto != "https") {
         return 301 https://$host$request_uri;
       }
 
-      proxy_pass https://devsec-istore-basket.herokuapp.com/swagger;
+      proxy_pass https://devsec-istore-basket.herokuapp.com/$1;
     }
 
-    location ~* /swagger/catalog {
+    location ~* /(swagger)/catalog {
       # force SSL / redirect http -> https
       if ($http_x_forwarded_proto != "https") {
         return 301 https://$host$request_uri;
       }
 
-      proxy_pass https://devsec-istore-catalog.herokuapp.com/swagger;
+      proxy_pass https://devsec-istore-catalog.herokuapp.com/$1;
     }
 
     location ~* /identity {
@@ -163,7 +163,7 @@ http {
         return 301 https://$host$request_uri;
       }
 
-      proxy_pass https://devsec-istore-is.herokuapp.com/;
+      proxy_pass https://devsec-istore-is.herokuapp.com/$is_args$args;
     }
 
     location ~* /assets {
