@@ -20,18 +20,18 @@ http {
 
   log_format l2met 'measure#nginx.service=$request_time request_id=$http_x_request_id';
 
-  log_format main '[$time_local]:: hostname: $hostname, uri: $uri, status: $status, remote_addr: $remote_addr, remote_user: $remote_user, '
-                  'server_name: $server_name, upstream_addr: $upstream_addr, upstream_status: $upstream_status, '
+  log_format main '[$time_local]: [ server_name: $server_name, host: $host, uri: $uri, status: $status, remote_addr: $remote_addr, remote_user: $remote_user, '
+                  'upstream_addr: $upstream_addr, upstream_status: $upstream_status, '
                   'request: $request, upstream_response_time: $upstream_response_time, msec: $msec, '
                   'request_time: $request_time, body_bytes_sent: $body_bytes_sent, http_referer: '
                   '$http_referer, http_user_agent: $http_user_agent, http_x_forwarded_for: '
-                  '$http_x_forwarded_for, http_x_request_id: $http_x_request_id';
+                  '$http_x_forwarded_for, http_x_request_id: $http_x_request_id ]';
 
   server {
     listen <%= ENV["PORT"] %>;
     listen [::]:<%= ENV["PORT"] %>;
 
-    server_name $hostname;
+    server_name $host;
 
     include mime.types; # leading slash - absolute reference, without slash - relative reference
     #include proxy.conf;
