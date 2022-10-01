@@ -146,7 +146,7 @@ http {
     }
 
     location ~* (\.well-known|account|ciba|connect|consent|device|diagnostics|externallogin|grants|home|redirect|serversidesessions|shared)/(.*) {
-      proxy_pass https://devsec-istore-is.herokuapp.com/$1$args;
+      proxy_pass https://devsec-istore-is.herokuapp.com/$1/$2$args;
     }
 
     location /identity/ {
