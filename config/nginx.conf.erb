@@ -150,7 +150,7 @@ http {
     #}
 
     location ^~ /identity {
-      proxy_pass https://devsec-istore-is.herokuapp.com;
+      proxy_pass https://devsec-istore-is.herokuapp.com/identity;
     }
 
     #location / {
