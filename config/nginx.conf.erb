@@ -94,79 +94,34 @@ http {
       proxy_pass https://devsec-istore.herokuapp.com;
     }
 
-    location ~* /(products) {
+    location ^~ /basket {
       # force SSL / redirect http -> https
       if ($http_x_forwarded_proto != "https") {
         return 301 https://$host$request_uri;
       }
 
-      proxy_pass https://devsec-istore.herokuapp.com/$1;
+      proxy_pass https://devsec-istore-basket.herokuapp.com;
     }
 
-    location ~* /(cart) {
+    location ^~ /catalog {
       # force SSL / redirect http -> https
       if ($http_x_forwarded_proto != "https") {
         return 301 https://$host$request_uri;
       }
 
-      proxy_pass https://devsec-istore.herokuapp.com/$1;
+      proxy_pass https://devsec-istore-catalog.herokuapp.com;
     }
 
-    location ~* /(checkout) {
+    location ^~ /identity {
       # force SSL / redirect http -> https
       if ($http_x_forwarded_proto != "https") {
         return 301 https://$host$request_uri;
       }
 
-      proxy_pass https://devsec-istore.herokuapp.com/$1;
+      proxy_pass https://devsec-istore-is.herokuapp.com;
     }
 
-    location ~* /(api/v1/basketbff) {
-      # force SSL / redirect http -> https
-      if ($http_x_forwarded_proto != "https") {
-        return 301 https://$host$request_uri;
-      }
-
-      proxy_pass https://devsec-istore-basket.herokuapp.com/$1;
-    }
-
-    location ~* /(api/v1/catalogbff) {
-      # force SSL / redirect http -> https
-      if ($http_x_forwarded_proto != "https") {
-        return 301 https://$host$request_uri;
-      }
-
-      proxy_pass https://devsec-istore-catalog.herokuapp.com/$1;
-    }
-
-    location ~* /(swagger)/basket {
-      # force SSL / redirect http -> https
-      if ($http_x_forwarded_proto != "https") {
-        return 301 https://$host$request_uri;
-      }
-
-      proxy_pass https://devsec-istore-basket.herokuapp.com/$1;
-    }
-
-    location ~* /(swagger)/catalog {
-      # force SSL / redirect http -> https
-      if ($http_x_forwarded_proto != "https") {
-        return 301 https://$host$request_uri;
-      }
-
-      proxy_pass https://devsec-istore-catalog.herokuapp.com/$1;
-    }
-
-    location ~* /identity {
-      # force SSL / redirect http -> https
-      if ($http_x_forwarded_proto != "https") {
-        return 301 https://$host$request_uri;
-      }
-
-      proxy_pass https://devsec-istore-is.herokuapp.com/$is_args$args;
-    }
-
-    location ~* /assets {
+    location ^~ /assets {
       # force SSL / redirect http -> https
       if ($http_x_forwarded_proto != "https") {
         return 301 https://$host$request_uri;
