@@ -20,19 +20,18 @@ http {
 
   log_format l2met 'measure#nginx.service=$request_time request_id=$http_x_request_id';
 
-  log_format main '[$time_local]: [ server_name: $server_name, host: $host, uri: $uri, status: $status, '
-                  'remote_addr: $remote_addr, remote_user: $remote_user, '
-                  'upstream_addr: $upstream_addr, upstream_status: $upstream_status, '
-                  'request: $request, upstream_response_time: $upstream_response_time, msec: $msec, '
-                  'request_time: $request_time, body_bytes_sent: $body_bytes_sent, http_referer: '
-                  '$http_referer, http_user_agent: $http_user_agent, http_x_forwarded_for: '
-                  '$http_x_forwarded_for, http_x_request_id: $http_x_request_id ]';
+  log_format main '[$time_local]: [ server_name: $server_name, scheme: $scheme, host: $host, uri: $uri, status: $status, '
+                  'request: $request, http_name: $http_name, request_time: $request_time, body_bytes_sent: $body_bytes_sent, '
+                  'msec: $msec, proxy_host: $proxy_host, remote_addr: $remote_addr, remote_user: $remote_user, '
+                  'upstream_addr: $upstream_addr, upstream_status: $upstream_status, upstream_response_time: $upstream_response_time, '
+                  'http_referer: $http_referer, http_user_agent: $http_user_agent, '
+                  'http_x_forwarded_for: $http_x_forwarded_for, http_x_request_id: $http_x_request_id ]';
 
   server {
     listen <%= ENV["PORT"] %>;
     listen [::]:<%= ENV["PORT"] %>;
 
-    server_name ~^(?<domain>.+)$;
+    server_name _;
 
     include mime.types; # leading slash - absolute reference, without slash - relative reference
     #include proxy.conf;
@@ -132,9 +131,9 @@ http {
         return 301 https://$host$request_uri;
       }
 
+      root <%= ENV['HOME'] %>/public;
       try_files $uri $uri/ $uri.html $uri/index.html =404;
 
-      #root <%= ENV['HOME'] %>/public;
       #alias <%= ENV['HOME'] %>/public/assets/images;
     }
 
