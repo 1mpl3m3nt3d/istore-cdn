@@ -131,11 +131,11 @@ http {
         return 301 https://$host$request_uri;
       }
 
-      root <%= ENV['HOME'] %>/public;
+      #root <%= ENV['HOME'] %>/public;
       #try_files $uri $uri/ $uri.html $uri/index.html =404;
+      try_files <%= ENV['HOME'] %>/public$uri <%= ENV['HOME'] %>/public$uri/ <%= ENV['HOME'] %>/public$uri.html <%= ENV['HOME'] %>/public$uri/index.html =404;
 
       #alias <%= ENV['HOME'] %>/public/assets/images;
-      alias /assets/images;
     }
 
     #location ~* /identity/(duende-logo\.svg|favicon\.ico|icon\.jpg|icon\.png) {
