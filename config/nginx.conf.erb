@@ -130,43 +130,43 @@ http {
       proxy_pass https://devsec-istore.herokuapp.com;
     }
 
-    location ^~ /api/basket/ {
+    location ^~ /api/basket {
       # force SSL / redirect http -> https
       if ($http_x_forwarded_proto != "https") {
         return 301 https://$host$request_uri;
       }
 
-      proxy_pass https://devsec-istore-basket.herokuapp.com/api/v1/basketbff/;
+      proxy_pass https://devsec-istore-basket.herokuapp.com/;
     }
 
-    location ^~ /api/catalog/ {
+    location ^~ /api/catalog {
       # force SSL / redirect http -> https
       if ($http_x_forwarded_proto != "https") {
         return 301 https://$host$request_uri;
       }
 
-      proxy_pass https://devsec-istore-catalog.herokuapp.com/api/v1/catalogbff/;
+      proxy_pass https://devsec-istore-catalog.herokuapp.com/;
     }
 
-    location ^~ /admin/basket/ {
+    location ^~ /swagger/basket {
       # force SSL / redirect http -> https
       if ($http_x_forwarded_proto != "https") {
         return 301 https://$host$request_uri;
       }
 
-      proxy_pass https://devsec-istore-basket.herokuapp.com/swagger/;
+      proxy_pass https://devsec-istore-basket.herokuapp.com/swagger;
     }
 
-    location ^~ /admin/catalog/ {
+    location ^~ /swagger/catalog {
       # force SSL / redirect http -> https
       if ($http_x_forwarded_proto != "https") {
         return 301 https://$host$request_uri;
       }
 
-      proxy_pass https://devsec-istore-catalog.herokuapp.com/swagger/;
+      proxy_pass https://devsec-istore-catalog.herokuapp.com/swagger;
     }
 
-    location ^~ /identity/ {
+    location ^~ /identity {
       # force SSL / redirect http -> https
       if ($http_x_forwarded_proto != "https") {
         return 301 https://$host$request_uri;
@@ -175,7 +175,7 @@ http {
       proxy_pass https://devsec-istore-is.herokuapp.com/;
     }
 
-    location /assets/images {
+    location /assets {
       # force SSL / redirect http -> https
       if ($http_x_forwarded_proto != "https") {
         return 301 https://$host$request_uri;
@@ -184,7 +184,7 @@ http {
       root <%= ENV['HOME'] %>/public;
       try_files $uri $uri/ $uri.html $uri/index.html =404;
 
-      #alias <%= ENV['HOME'] %>/public/assets/images;
+      #alias <%= ENV['HOME'] %>/public/assets;
     }
 
     #location / {
@@ -242,8 +242,8 @@ http {
     #  return 301 <%= ENV["REACT_APP_PGADMIN_URL"] || 'http://host.docker.internal:8001' %>/login;
     #}
 
-    #location /assets/images {
-    #  alias /var/www/assets/images;
+    #location /assets {
+    #  alias /var/www/assets;
     #}
   }
 
