@@ -138,15 +138,15 @@ http {
     }
 
     location ~* /identity/(duende-logo\.svg|favicon\.ico|icon\.jpg|icon\.png) {
-      proxy_pass https://devsec-istore-is.herokuapp.com/$1$is_args$args;
+      proxy_pass https://devsec-istore-cdn.herokuapp.com/identity/$1$is_args$args;
     }
 
     location ~* /identity/(\.well-known|account|ciba|connect|consent|css|device|diagnostics|externallogin|grants|home|js|lib|redirect|serversidesessions|shared)/(.*) {
-      proxy_pass https://devsec-istore-is.herokuapp.com/$1/$2$is_args$args;
+      proxy_pass https://devsec-istore-cdn.herokuapp.com/identity/$1/$2$is_args$args;
     }
 
     location ~* (\.well-known|account|ciba|connect|consent|device|diagnostics|externallogin|grants|home|redirect|serversidesessions|shared)/(.*) {
-      proxy_pass https://devsec-istore-is.herokuapp.com/$1/$2$is_args$args;
+      proxy_pass https://devsec-istore-cdn.herokuapp.com/identity/$1/$2$is_args$args;
     }
 
     location /identity/ {
