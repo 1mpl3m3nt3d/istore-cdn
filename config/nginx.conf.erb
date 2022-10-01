@@ -97,46 +97,57 @@ http {
 # ------- TEST START -------
 
     location = / {
+      resolver 1.1.1.1 1.0.0.1;
       proxy_pass https://devsec-istore.herokuapp.com;
     }
 
     location / {
+      resolver 1.1.1.1 1.0.0.1;
       proxy_pass https://devsec-istore.herokuapp.com;
     }
 
     location ^~ /products {
+      resolver 1.1.1.1 1.0.0.1;
       proxy_pass https://devsec-istore.herokuapp.com;
     }
 
     location ^~ /cart {
+      resolver 1.1.1.1 1.0.0.1;
       proxy_pass https://devsec-istore.herokuapp.com;
     }
 
     location ^~ /checkout {
+      resolver 1.1.1.1 1.0.0.1;
       proxy_pass https://devsec-istore.herokuapp.com;
     }
 
     location ^~ /api/basket/ {
+      resolver 1.1.1.1 1.0.0.1;
       proxy_pass https://devsec-istore-basket.herokuapp.com/api/v1/basketbff/; # server listens here and receives nginx requests
     }
 
     location ^~ /api/catalog/ {
+      resolver 1.1.1.1 1.0.0.1;
       proxy_pass https://devsec-istore-catalog.herokuapp.com/api/v1/catalogbff/; # server listens here and receives nginx requests
     }
 
     location ~* /identity/(duende-logo\.svg|favicon\.ico|icon\.jpg|icon\.png) {
-      proxy_pass https://devsec-istore-is.herokuapp.com/$1; # server listens here and receives nginx requests
+      resolver 1.1.1.1 1.0.0.1;
+      proxy_pass https://devsec-istore-is.herokuapp.com/$uri; # server listens here and receives nginx requests
     }
 
     location ~* /identity/(\.well-known|account|ciba|connect|consent|css|device|diagnostics|externallogin|grants|home|js|lib|redirect|serversidesessions|shared)/(.*) {
-      proxy_pass https://devsec-istore-is.herokuapp.com/$1/$2; # server listens here and receives nginx requests
+      resolver 1.1.1.1 1.0.0.1;
+      proxy_pass https://devsec-istore-is.herokuapp.com/$uri; # server listens here and receives nginx requests
     }
 
     location ~* (\.well-known|account|ciba|connect|consent|device|diagnostics|externallogin|grants|home|redirect|serversidesessions|shared)/(.*) {
-      proxy_pass https://devsec-istore-is.herokuapp.com/$1/$2; # server listens here and receives nginx requests
+      resolver 1.1.1.1 1.0.0.1;
+      proxy_pass https://devsec-istore-is.herokuapp.com/$uri; # server listens here and receives nginx requests
     }
 
     location /identity/ {
+      resolver 1.1.1.1 1.0.0.1;
       proxy_pass https://devsec-istore-is.herokuapp.com/; # server listens here and receives nginx requests
     }
 
