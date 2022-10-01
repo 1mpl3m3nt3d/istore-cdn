@@ -14,18 +14,21 @@ events {
 }
 
 http {
+  log_format l2met 'measure#nginx.service=$request_time request_id=$http_x_request_id';
+  log_format main '[ $time_local ]: [ server_name: $server_name, scheme: $scheme, host: $host, uri: $uri, status: $status, '
+                  'request: $request, http_name: $http_name, request_time: $request_time, body_bytes_sent: $body_bytes_sent, '
+                  'msec: $msec, server_addr: $server_addr, remote_addr: $remote_addr, remote_user: $remote_user, proxy_host: $proxy_host, '
+                  'upstream_addr: $upstream_addr, upstream_status: $upstream_status, upstream_response_time: $upstream_response_time, '
+                  'http_referer: $http_referer, http_user_agent: $http_user_agent, http_x_forwarded_for: $http_x_forwarded_for, '
+                  'http_x_forwarded_proto: $http_x_forwarded_proto, http_x_request_id: $http_x_request_id ]';
 
   server_names_hash_bucket_size 128; # this seems to be required for some vhosts
   server_names_hash_max_size 512;
 
-  log_format l2met 'measure#nginx.service=$request_time request_id=$http_x_request_id';
-
-  log_format main '[$time_local]: [ server_name: $server_name, scheme: $scheme, host: $host, uri: $uri, status: $status, '
-                  'request: $request, http_name: $http_name, request_time: $request_time, body_bytes_sent: $body_bytes_sent, '
-                  'msec: $msec, server_addr: $server_addr, remote_addr: $remote_addr, remote_user: $remote_user, proxy_host: $proxy_host, '
-                  'upstream_addr: $upstream_addr, upstream_status: $upstream_status, upstream_response_time: $upstream_response_time, '
-                  'http_referer: $http_referer, http_user_agent: $http_user_agent, '
-                  'http_x_forwarded_for: $http_x_forwarded_for, http_x_forwarded_proto: $http_x_forwarded_proto, http_x_request_id: $http_x_request_id ]';
+  #upstream app_server {
+  #  #server unix:/tmp/nginx.socket weight=1 fail_timeout=0;
+  #  #server host.docker.internal:5001 weight=1 fail_timeout=0;
+  #}
 
   server {
     listen <%= ENV["PORT"] %>;
@@ -61,19 +64,14 @@ http {
     large_client_header_buffers 16 128k;
 
     error_log <%= ENV['NGINX_ERROR_LOG_PATH'] || '/dev/stdout' %> notice; # levels: debug, info, notice, warn, error (default), crit, alert, emerg
-    access_log <%= ENV['NGINX_ACCESS_LOG_PATH'] || '/dev/stdout' %> main; # formats: combined, l2met, main
+    access_log <%= ENV['NGINX_ACCESS_LOG_PATH'] || '/dev/stdout' %> main; # formats: combined (default), l2met, main
     #access_log syslog:server=unix:<%= ENV['NGINX_SOCKET'] || '/tmp/nginx.socket' %>,facility=local7,tag=nginx,severity=info main buffer=64k gzip=1 flush=5m;
 
     resolver 1.1.1.1 1.0.0.1;
     resolver_timeout 30s;
 
-    #root <%= ENV['HOME'] %>/public;
+    #root <%= ENV['HOME'] || '/app' %><%= ENV['PUBLIC'] || '/public' %>;
     #index index.html index.htm index.php;
-
-    #upstream app_server {
-    #  #server unix:/tmp/nginx.socket weight=1 fail_timeout=0;
-    #  #server host.docker.internal:5001 weight=1 fail_timeout=0;
-    #}
 
     proxy_buffering off;
     proxy_redirect off;
@@ -85,34 +83,29 @@ http {
     proxy_read_timeout 90;
     proxy_send_timeout 90;
 
-    location = / {
-      proxy_pass https://devsec-istore.herokuapp.com;
-    }
-
-    location ^~ /basket {
-      proxy_pass https://devsec-istore-basket.herokuapp.com;
-    }
-
-    location ^~ /catalog {
-      proxy_pass https://devsec-istore-catalog.herokuapp.com;
-    }
-
-    location ^~ /identity {
-      proxy_pass https://devsec-istore-is.herokuapp.com;
-    }
-
     location ^~ /assets {
-      root <%= ENV['HOME'] %>/public;
+      root <%= ENV['HOME'] || '/app' %><%= ENV['PUBLIC'] || '/public' %>;
       try_files $uri $uri/ $uri.html $uri/index.html =404;
     }
 
-    location / {
-      # force SSL / redirect http -> https
-      if ($http_x_forwarded_proto != "https") {
-        return 301 https://$host$request_uri;
-      }
+    location ^~ /basket {
+      proxy_pass <%= ENV['PROXY_PASS_BASKET'] || 'https://devsec-istore-basket.herokuapp.com' %>;
+    }
 
-      proxy_pass https://devsec-istore.herokuapp.com;
+    location ^~ /catalog {
+      proxy_pass <%= ENV['PROXY_PASS_CATALOG'] || 'https://devsec-istore-catalog.herokuapp.com' %>;
+    }
+
+    location ^~ /identity {
+      proxy_pass <%= ENV['PROXY_PASS_IDENTITY'] || 'https://devsec-istore-is.herokuapp.com' %>;
+    }
+
+    #location ^~ /pgadmin {
+    #  proxy_pass <%= ENV['PROXY_PASS_PGADMIN'] || 'https://devsec-istore-pgadmin.herokuapp.com' %>;
+    #}
+
+    location / {
+      proxy_pass <%= ENV['PROXY_PASS_SPA'] || 'https://devsec-istore.herokuapp.com' %>;
     }
 
     #location / {
@@ -126,8 +119,8 @@ http {
     #  #proxy_pass http://host.docker.internal:5001 weight=1 fail_timeout=0;
     #  #proxy_pass http://unix:/tmp/nginx.socket weight=1 fail_timeout=0;
     #
-    #  #root <%= ENV['HOME'] %>/public;
-    #  #try_files $uri $uri/ $uri.html =404;
+    #  #root <%= ENV['HOME'] || '/app' %><%= ENV['PUBLIC'] || '/public' %>;
+    #  #try_files $uri $uri/ $uri.html $uri/index.html =404;
     #  #index index.html index.htm index.php;
     #  #alias <%= ENV['HOME'] %>/public;
     #
@@ -154,19 +147,19 @@ http {
     #  proxy_set_header X-Real-IP $remote_addr;
     #}
 
-    #location /basket/swagger {
+    #location /swagger/basket {
     #  return 301 <%= ENV["REACT_APP_BASKET_API_URL"] || 'http://host.docker.internal:5003' %>/swagger;
     #}
 
-    #location /catalog/swagger {
+    #location /swagger/catalog {
     #  return 301 <%= ENV["REACT_APP_CATALOG_API_URL"] || 'http://host.docker.internal:5000' %>/swagger;
     #}
 
-    #location /identity {
+    #location /admin/identity {
     #  return 301 <%= ENV["REACT_APP_IDENTITY_URL"] || 'http://host.docker.internal:5002' %>;
     #}
 
-    #location /pgadmin {
+    #location /admin/pg {
     #  return 301 <%= ENV["REACT_APP_PGADMIN_URL"] || 'http://host.docker.internal:8001' %>/login;
     #}
 
