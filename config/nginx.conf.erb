@@ -136,8 +136,8 @@ http {
       proxy_pass https://devsec-istore-is.herokuapp.com/$1/$2; # server listens here and receives nginx requests
     }
 
-    location ~* ^/identity/(.*)$ {
-      proxy_pass https://devsec-istore-is.herokuapp.com/$1; # server listens here and receives nginx requests
+    location /identity/ {
+      proxy_pass https://devsec-istore-is.herokuapp.com/; # server listens here and receives nginx requests
     }
 
 # -------- TEST END --------
